@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const homeController = require("../controllers/homeController");
 
-module.exports = function() {
-    router.get("/", (req, res) => {
-        res.send("Todo listo y operativo");
-    } );
+
+module.exports = () => {
+    router.get("/", homeController.showJobs);
     return router
 }

@@ -1,7 +1,14 @@
+const mongoose = require("mongoose");
+require("./config/db");
+
 const express = require("express");
 const path = require("path");
 const {engine} = require("express-handlebars");
 const routes = require("./routes");
+require("dotenv").config({ path : "dev.env"});
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 
 const app = express();
 
@@ -15,6 +22,18 @@ app.engine("handlebars",
 
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(cookieParser());
+
+app.use(session({
+    secret: process.env.SECRETO,
+    key: process.env.KEY,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.DATABASE
+    })
+}));
+
 app.use("/", routes());
 
-app.listen(5000);
+app.listen(process.env.PUERTO);
